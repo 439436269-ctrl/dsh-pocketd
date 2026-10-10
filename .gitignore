@@ -1,0 +1,10 @@
+# 编译产物
+/dsh-pocketd
+/dsh-pocketd.exe
+
+# 本地运行数据
+*.log
+.pin
+
+# macOS
+.DS_Store
