@@ -119,7 +119,7 @@ body:   dsh web authentication required; reopen the URL printed by dsh web.
 
 ```bash
 go build -o dsh-pocketd .
-go test ./...     # 12 个用例：分级/防伪造/限速/认证/改写/注入/压缩/局域网开关
+go test ./...     # 11 个用例：分级/防伪造/限速/认证/改写/注入/压缩/局域网开关
 go vet ./...
 gofmt -l .        # 无输出即合规
 ```
