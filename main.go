@@ -21,7 +21,7 @@ import (
 	"time"
 )
 
-const version = "0.1.0"
+const version = "0.1.1"
 
 func main() {
 	var (
@@ -85,7 +85,7 @@ func main() {
 		ReadHeaderTimeout: 15 * time.Second,
 	}
 
-	banner(upstream, addr, effectivePIN, *noAuth, *launchToken != "" || *tokenCmd != "")
+	banner(upstream, addr, effectivePIN, *noAuth, *launchToken != "" || *tokenCmd != "", *upstreamPin != "")
 
 	// 收到 Ctrl-C / SIGTERM 时优雅退出
 	go func() {
@@ -111,7 +111,7 @@ func defaultUpstream() string {
 	return "http://127.0.0.1:19387"
 }
 
-func banner(upstream *url.URL, addr, pin string, noAuth, hasToken bool) {
+func banner(upstream *url.URL, addr, pin string, noAuth, hasToken, chainMode bool) {
 	line := strings.Repeat("─", 52)
 	log.Println(line)
 	log.Printf("dsh-pocketd %s", version)
@@ -126,7 +126,11 @@ func banner(upstream *url.URL, addr, pin string, noAuth, hasToken bool) {
 	} else {
 		log.Printf("  访问密码  %s", pin)
 	}
-	if !hasToken {
+	switch {
+	case chainMode:
+		// 链式部署下会话握手由上游完成，本进程不需要 launch token
+		log.Printf("  握手      链式部署：由上游 http://%s 完成会话握手", upstream.Host)
+	case !hasToken:
 		log.Printf("  提示      未提供 launch token：直连本版 DSH 会 401。")
 		log.Printf("            用 -launch-token / -token-cmd 提供，或改用链式部署（-upstream-pin）。")
 	}
